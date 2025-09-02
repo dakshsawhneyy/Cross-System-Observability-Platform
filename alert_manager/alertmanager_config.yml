@@ -1,0 +1,35 @@
+# Specifies How & Where to Send Alerts
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: AlertmanagerConfig
+metadata:
+  name: main-rules-alert-config
+  namespace: monitoring
+  labels:
+    release: monitoring
+spec:
+  route:
+    repeatInterval: 30m
+    receiver: 'null'
+    routes:
+    - matchers:
+      - name: alertname
+        value: HighCpuUsage
+      receiver: 'send-email'
+    - matchers:
+      - name: alertname
+        value: PodRestart
+      receiver: 'send-email'
+      repeatInterval: 5m
+  receivers:
+  - name: 'send-email'
+    emailConfigs:
+    - to: dakshsawhney2@gmail.com
+      from: dakshsawhney2@gmail.com
+      sendResolved: false
+      smarthost: smtp.gmail.com:587
+      authUsername: dakshsawhney2@gmail.com
+      authIdentity: dakshsawhney2@gmail.com
+      authPassword:
+        name: mail-pass
+        key: gmail-pass
+  - name: 'null'
